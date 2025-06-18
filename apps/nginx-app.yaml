@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/witcher7/simple-nginx-argocd
     targetRevision: HEAD
-    path: manifests
+    path: .
   destination:
     server: https://kubernetes.default.svc
     namespace: default
