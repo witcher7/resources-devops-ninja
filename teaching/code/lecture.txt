@@ -1,0 +1,127 @@
+|------apps/
+         |
+#  parent-of-apps.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-of-apps
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/YOUR_USERNAME/argocd-apps
+    targetRevision: HEAD
+    path: apps
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+
+---
+# Child App 1: config-app (Wave -1)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: config-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/YOUR_USERNAME/argocd-apps
+    targetRevision: HEAD
+    path: config
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+---
+# Child App 2: backend-app (Wave 0)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: backend-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/YOUR_USERNAME/argocd-apps
+    targetRevision: HEAD
+    path: backend
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+---
+# Child App 2: backend-app (Wave 0)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: backend-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/YOUR_USERNAME/argocd-apps
+    targetRevision: HEAD
+    path: backend
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+---
+
+
+argocd-apps/
+├── apps/
+│   └── app-of-apps.yaml
+├── config/
+│   └── configmap.yaml         # wave -1
+├── backend/
+│   └── deployment.yaml        # wave 0
+├── frontend/
+│   └── deployment.yaml        # wave 1
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+data:
+  APP_MODE: "kingops"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  # your backend spec here
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  # your frontend spec here
