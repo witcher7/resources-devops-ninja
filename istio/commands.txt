@@ -1,0 +1,5 @@
+kubectl create namespace istio-system
+helm repo add istio https://istio-release.storage.googleapis.com/charts
+helm install istio-base istio/base -n istio-system --version 1.25.2
+helm install istiod istio/istiod -n istio-system --version 1.25.2 --wait
+helm install istio-ingress istio/gateway -n istio-system --version 1.25.2
