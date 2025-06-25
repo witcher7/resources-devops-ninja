@@ -1,41 +1,35 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: order-management
+  name: product-catalog
   namespace: ecommerce
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: order-management
+      app: product-catalog
       version: v1
   template:
     metadata:
       labels:
-        app: order-management
+        app: product-catalog
         version: v1
     spec:
       containers:
-      - name: order-management
-        image: rslim087/order-management:1.0.0
+      - name: product-catalog
+        image: rslim087/product-catalog:1.0.0
         ports:
-        - containerPort: 9090
-        env:
-        - name: PRODUCT_INVENTORY_API_HOST
-          value: "http://product-inventory"
-        - name: PRODUCT_CATALOG_API_HOST
-          value: "http://product-catalog"
-        - name: SHIPPING_HANDLING_API_HOST
-          value: "http://shipping-and-handling"
+        - containerPort: 3001
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: order-management
+  name: product-catalog
   namespace: ecommerce
 spec:
   ports:
-  - port: 9090
+  - port: 3001
     name: http
   selector:
-    app: order-management
+    app: product-catalog
