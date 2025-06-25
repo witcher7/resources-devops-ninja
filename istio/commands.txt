@@ -16,3 +16,8 @@ kubectl apply -f istio-addons/prometheus.yaml
 kubectl apply -f istio-addons/grafana.yaml
 kubectl apply -f istio-addons/kiali.yaml
 kubectl apply -f istio-addons/jaeger.yam
+
+## Create ecommerce namespace and enable istio-injection
+
+kubectl create namespace ecommerce
+kubectl label namespace ecommerce istio-injection=enabled
