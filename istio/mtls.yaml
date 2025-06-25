@@ -1,0 +1,11 @@
+
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: ecommerce
+spec:
+  mtls:
+    mode: STRICT
+
+# Secures all internal communication, can check in Kiali
