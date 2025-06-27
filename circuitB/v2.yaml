@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-management-v2
+  namespace: ecommerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-management
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: order-management
+        version: v2
+    spec:
+      containers:
+      - name: order-management
+        image: rslim087/order-management:2.0.0
+        ports:
+        - containerPort: 9090
+        env:
+        - name: PRODUCT_INVENTORY_API_HOST
+          value: "http://product-inventory"
+        - name: PRODUCT_CATALOG_API_HOST
+          value: "http://product-catalog"
+        - name: SHIPPING_HANDLING_API_HOST
+          value: "http://shipping-and-handling"
+        # Intentionally omitting the MongoDB connection string
+        # This will cause the service to fail when trying to access the database
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: order-management
+  namespace: ecommerce
+spec:
+  host: order-management
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+  - name: v2
+    labels:
+      version: v2
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 100
+      http:
+        http1MaxPendingRequests: 10
+        maxRequestsPerConnection: 10
+    outlierDetection:
+      consecutive5xxErrors: 5
+      interval: 30s
+      baseEjectionTime: 30s
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: order-management
+  namespace: ecommerce
+spec:
+  hosts:
+  - order-management
+  http:
+  - route:
+    - destination:
+        host: order-management
+        subset: v1
+      weight: 80
+    - destination:
+        host: order-management
+        subset: v2
+      weight: 20
