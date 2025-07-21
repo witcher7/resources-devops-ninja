@@ -11,6 +11,9 @@ You can then run helm search repo grafana to see the charts.
 
 Chart documentation is available in grafana directory.
 
+
+VALUES.yaml
+
 ```
 # Deployment mode: SingleBinary (simple), SimpleScalable (medium), Distributed (large)
 deploymentMode: SingleBinary
@@ -48,3 +51,19 @@ loki:
       directory: /var/loki/chunks
   useTestSchema: true
 ```
+ helm install loki grafana/loki --namespace monitoring --version 6.29.0 --values loki/loki-values.yaml
+
+Testing Loki
+port-forward
+
+kubectl port-forward --namespace monitoring svc/loki-gateway 3100:80
+send test logs
+
+
+curl -H "Content-Type: application/json" -H "X-Scope-OrgID: fake" -XPOST -s "http://localhost:3100/loki/api/v1/push" \
+  --data-raw '{"streams": [{"stream": {"job": "test"}, "values": [["'$(date +%s)'000000000", "test log entry"]]}]}'
+
+query for the same logs
+
+curl -H "X-Scope-OrgID: fake" "http://localhost:3100/loki/api/v1/query_range" --data-urlencode 'query={job="test"}'
+
