@@ -1,0 +1,172 @@
+Why Loki Over Elasticsearch?
+Before we dive in, let's address why enterprises are starting to abandon Elasticsearch for Loki. The key difference lies in how these systems handle log storage:
+
+Loki only indexes the metadata while compressing the actual log content
+
+Elasticsearch indexes everything, consuming significantly more resources
+
+For enterprises storing millions of logs, Loki provides a more efficient and scalable solution.
+
+The Power of Combined Monitoring
+The real power comes from combining Prometheus metrics with Loki logs in a Grafana dashboard:
+
+Metrics show you when something is wrong (like error spikes or unusual patterns)
+
+Logs reveal specific events that happened at that moment in time
+
+Grafana unifies both in a single dashboard
+
+Prerequisites
+A Kubernetes cluster (minikube, kind, or a cloud provider)
+
+Helm installed
+
+kubectl configured to access your cluster
+
+All project files are available in the GitHub repository.
+
+Setup Steps
+1. Create the Monitoring Namespace
+kubectl create namespace monitoring
+2. Install Loki
+helm repo add grafana <https://grafana.github.io/helm-charts>
+helm repo update
+
+helm install loki grafana/loki \
+  --namespace monitoring \
+  --version 6.29.0 \
+  --values loki/loki-values.yaml
+The custom values file configures Loki for single-binary deployment mode, which is perfect for development:
+
+deploymentMode: SingleBinary
+loki:
+  auth_enabled: false
+  storage:
+    type: filesystem
+3. Install Kube-Prometheus-Stack
+helm repo add prometheus-community <https://prometheus-community.github.io/helm-charts>
+helm repo update
+
+helm install prometheus prometheus-community/kube-prometheus-stack \
+  --namespace monitoring \
+  --version 45.7.1 \
+  --values prometheus/prometheus-values.yaml
+The values file automatically configures Grafana to use Loki as a data source:
+
+grafana:
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      url: http://loki-gateway.monitoring.svc.cluster.local
+      access: proxy
+4. Deploy the Demo Environment
+Apply the following resources to set up log generation, metrics export, and log shipping:
+
+kubectl apply -f test/fake-metrics-logs.yaml
+This creates:
+
+A log generator that produces JSON-formatted logs
+
+A metrics exporter that generates metrics based on those logs
+
+Promtail to ship logs to Loki
+
+ServiceMonitor for Prometheus to scrape metrics
+
+5. Access Grafana
+Get the Grafana password:
+
+kubectl get secret --namespace monitoring prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+Port-forward to access Grafana:
+
+kubectl port-forward --namespace monitoring svc/prometheus-grafana 3000:80
+Access Grafana at http://localhost:3000 with:
+
+Username: admin
+
+Password: (from the command above)
+
+Creating the Unified Dashboard
+Step 1: Add Metrics Visualization
+Create a new dashboard
+
+Add a visualization with Prometheus as data source
+
+Use PromQL to query metrics:
+
+sum by(method) (rate(http_requests_total{method=~"$method_filter"}[5m]))
+This shows request rates by HTTP method.
+
+Step 2: Add Logs Panel
+Add another visualization with Loki as data source
+
+Use LogQL to query logs:
+
+{service_name="generated-logs"} |= "$filter" | json
+Step 3: Add Variables for Synchronization
+Create variables to synchronize both panels:
+
+method_filter: Query Loki for available HTTP methods
+
+filter: Text box for searching through logs
+
+Both panels now update together when you change filters.
+
+Understanding the Architecture
+How Loki Indexes Logs
+Loki only indexes labels (metadata), not the entire log content. In our setup:
+
+Promtail reads logs and extracts labels like http_method and http_status
+
+These labels become indexed for fast querying
+
+The remaining log content is compressed
+
+This is configured in the Promtail ConfigMap:
+
+pipeline_stages:
+  - json:
+      expressions:
+        http_method: 'method'
+        http_status: "status"
+  - labels:
+      http_method:
+      http_status:
+Using the Dashboard
+The final dashboard shows:
+
+Request rates by method (metrics)
+
+Status code distribution (metrics)
+
+Response time percentiles (metrics)
+
+Raw logs filtered by method and status (logs)
+
+When you see anomalies in metrics (like a sudden drop in requests), you can:
+
+Note the exact time of the anomaly
+
+Look at the corresponding logs
+
+Filter by error codes or specific paths
+
+Diagnose the root cause
+
+Clean Up
+To remove all resources:
+
+helm uninstall loki --namespace monitoring
+helm uninstall prometheus --namespace monitoring
+kubectl delete -f test/fake-metrics-logs.yaml
+kubectl delete namespace monitoring
+Conclusion
+This setup demonstrates why combining Prometheus metrics with Loki logs in a unified Grafana dashboard is becoming the industry standard. You get:
+
+Efficient log storage with Loki
+
+Powerful metrics tracking with Prometheus
+
+Unified visualization in Grafana
+
+Quick issue identification and diagnosis
