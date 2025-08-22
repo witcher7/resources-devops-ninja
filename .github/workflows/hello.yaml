@@ -1,0 +1,9 @@
+name: hello
+on: push
+jobs:
+  balley-balley:
+     runs-on: ubuntu
+     steps:
+       - name: Say Hello
+         run: echo "HELLO BHAI, $GITHUB_ACTOR"
+    
