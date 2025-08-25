@@ -1,10 +1,16 @@
-name: hello
+name: First-workflow
 on: push
 jobs:
-  balley-balley:
-     runs-on: ubuntu
+ first-job:
+   runs-on: ubuntu-latest
+   steps:
+     - name: Print Greeting
+       run: echo "Hello Mica Mica"
+     - name: Print Goodbye
+       run: echo "DOne!! - bye!!"
+
+ second-job:
+     runs-on: ubuntu-latest
      steps: 
-       - uses: actions/checkout@v4
-       - name: Say Hello
-         run: echo "HELLO BHAI, $GITHUB_ACTOR"
-    
+       - name: Bla bla
+         run: echo "Bla Bla" 
