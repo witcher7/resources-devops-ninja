@@ -1,16 +1,32 @@
-name: First-workflow
-on: workflow_dispatch
+name: Deploy Project
+on: [push, workflow_dispatch]
 jobs:
- first-job:
-   runs-on: ubuntu-latest
-   steps:
-     - name: Print Greeting
-       run: echo "Hello Mica Mica"
-     - name: Print Goodbye
-       run: echo "DOne!! - bye!!"
-
- second-job:
-     runs-on: ubuntu-latest
-     steps: 
-       - name: Bla bla
-         run: echo "Bla Bla" 
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci
+      - name: Run tests
+        run: npm test
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm install 
+      - name: Build project
+        run: npm run build
+      - name: Deploy
+        run: echo "Deploying ..."
