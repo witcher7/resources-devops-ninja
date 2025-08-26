@@ -1,5 +1,5 @@
 name: Custom Environmnet Variables
-on: pull_request
+on: push
 env: 
  SUBSCRIBE: "SUPERMAN"
 jobs: 
@@ -8,10 +8,10 @@ jobs:
     env: 
       MEMORY: TOKYO
     steps:
-      - name: "Please come to tokyo and visit shrine!!"
+      - name: memory check
         run: echo "$MEMORY"
         env: 
           NAME: "HINAGURA"
-      - name: "After Env"
+      - name: Name Check
         run: echo "$NAME"
         
