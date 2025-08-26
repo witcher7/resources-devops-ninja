@@ -2,6 +2,7 @@ name: Custom Environmnet Variables
 on: push
 env: 
  SUBSCRIBE: "SUPERMAN"
+ NAME: "HINAGURA"
 jobs: 
    hello:
     runs-on: ubuntu-latest
@@ -9,11 +10,10 @@ jobs:
       MEMORY: TOKYO
     steps:
       - name: memory check
-        env: 
-          NAME: "HINAGURA"
         run: | 
             echo "$MEMORY"
             echo "$NAME"
       - name: Name Check
-        run: echo "$NAME"
-        
+        run: |
+         echo "$NAME"
+         echo "$MEMORY"
