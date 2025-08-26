@@ -1,15 +1,8 @@
-name: Print Greetings
+name: Context testing
 on: push
-jobs:
- first-job:
-  runs-on: ubuntu-latest
-  steps:
-    - name: Print Greetings
-      run: echo "HIII HELLOOOO HOW ARE YOU"
-    - name: Print Goodbye
-      run: echo "SEE YOU SOON!!!"
- second-job:
-  runs-on: ubuntu-latest
-  steps: 
-    - name: Print Hello World
-      run: echo "HELLO WORLD"
+jobs: 
+  first-job:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Github_context
+        run: echo '${{toJSON(github)}}'
