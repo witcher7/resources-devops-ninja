@@ -1,5 +1,8 @@
 name: Custom Environmnet Variables
-on: push
+on: 
+  push:
+    branches:
+      - main
 env: 
  SUBSCRIBE: "SUPERMAN"
  NAME: "HINAGURA"
