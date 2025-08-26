@@ -1,20 +1,17 @@
-name: Action Workflow
-on:  [push]
+name: Custom Environmnet Variables
+on: pull_request
+env: 
+ SUBSCRIBE: "SUPERMAN"
 jobs: 
-  job-01: 
-     runs-on: ubuntu-latest
-     steps:
-      - name: List Files
-        run: |
-           pwd
-           ls -a
-           echo $GITHUB_SHA
-           echo $GITHUB_REPOSITORY
-           echo $GITHUB_WORKSPACE
-      - name: Cloning repository
-        uses: actions/checkout@v1
-      - name: List files after checkout
-        run:  |
-          pwd
-          ls -a
-       
+   hello:
+    runs-on: ubuntu-latest
+    env: 
+      MEMORY: TOKYO
+    steps:
+      - name: "Please come to tokyo and visit shrine!!"
+        run: echo "$MEMORY"
+        env: 
+          NAME: "HINAGURA"
+      - name: "After Env"
+        run: echo "$NAME"
+        
