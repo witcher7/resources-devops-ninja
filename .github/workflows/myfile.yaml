@@ -1,8 +1,13 @@
-name: Context testing
-on: push
+name: Action_Workflow
+on: [push]
 jobs: 
-  dump_context_to_log:
+ job-01:
     runs-on: ubuntu-latest
     steps: 
-      - name: Github_context
-        run: echo '${{toJSON(job)}}'
+      - name: List Files
+        run: |
+         pwd
+         ls -a
+         echo "$GITHUB_SHA"
+         echo "$GITHUB_ACTOR"
+         echo "$GITHUB_REPOSITORY"
