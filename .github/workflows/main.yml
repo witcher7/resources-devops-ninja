@@ -18,9 +18,10 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
-
+        working-directory: ./frontend
       - name: Run Tests
         run: npm test
+        working-directory: ./frontend
 
   deploy: 
     needs: test   # ✅ deploy runs only if test job succeeds
@@ -36,6 +37,7 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
+        working-directory: ./frontend
 
       - name: Build project
         run: npm run build
