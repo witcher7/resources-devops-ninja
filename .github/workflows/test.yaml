@@ -5,7 +5,7 @@ on:
       - feature
 env: 
  SUBSCRIBE: "SUPER-MAN"
- NAME: "HINAGURA"
+ NAME: "HINAGURAaaaa"
 jobs: 
    hello:
     runs-on: ubuntu-latest
