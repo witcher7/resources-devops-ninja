@@ -1,7 +1,7 @@
 name: Context testing
 on: push
 jobs: 
-  first-job:
+  dump_context_to_log:
     runs-on: ubuntu-latest
     steps: 
       - name: Github_context
