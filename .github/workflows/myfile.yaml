@@ -8,11 +8,11 @@ jobs:
      - name: Show OS
        run: uname -a
      - name: Node & npm
-       run : node --version && npm --version
+       run : node -v && npm -v
      - name: Python && pip
        run : pyhton3 --version && pip3 --version
      - name: Go
-       run: go --version
+       run: go version
      - name: Docker && Kubectl
        run: docker --version && kubectl --version
        
