@@ -1,0 +1,47 @@
+name: Deploy Project
+
+on: 
+  push:
+  workflow_dispatch:
+
+jobs: 
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cloning repo
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Run Tests
+        run: npm test
+
+  deploy: 
+    needs: test   # ✅ deploy runs only if test job succeeds
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cloning repo
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy
+        run: echo "Deploying 🚀"
