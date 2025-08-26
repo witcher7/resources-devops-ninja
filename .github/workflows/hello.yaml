@@ -9,9 +9,11 @@ jobs:
       MEMORY: TOKYO
     steps:
       - name: memory check
-        run: echo "$MEMORY"
         env: 
           NAME: "HINAGURA"
+        run: | 
+            echo "$MEMORY"
+            echo "$NAME"
       - name: Name Check
         run: echo "$NAME"
         
