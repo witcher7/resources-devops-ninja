@@ -10,9 +10,9 @@ jobs:
      - name: Node & npm
        run : node -v && npm -v
      - name: Python && pip
-       run : pyhton3 --version && pip3 --version
+       run : Pyhton3 --version && pip3 --version
      - name: Go
        run: go version
      - name: Docker && Kubectl
-       run: docker --version && kubectl --version
+       run: docker --version && kubectl version --client
        
