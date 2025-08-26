@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print HI
-        run: echo "HI"
+        run: echo "HI..."
 
       - name: Print bye
         run: echo "BYE"
