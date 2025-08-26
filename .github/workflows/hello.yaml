@@ -2,7 +2,7 @@ name: Custom Environmnet Variables
 on: 
   push:
     branches:
-      - env
+      - feature
 env: 
  SUBSCRIBE: "SUPERMAN"
  NAME: "HINAGURA"
