@@ -15,7 +15,7 @@ jobs:
           run: npm run build
         - name: Test npm
           run: npm test
-   deploy: 
+  deploy: 
      uses: test
      runs-on : ubuntu-latest
      steps:
