@@ -1,3 +1,4 @@
+ draft-pr-branch
 name: Create Environment Variables
 on: pull_request
 env: 
@@ -15,3 +16,27 @@ jobs:
       - name: "AFTER !!!"
         run: echo "$NAME"
         
+
+name: Custom Environmnet Variables
+on: 
+  push:
+    branches:
+      - feature
+env: 
+ SUBSCRIBE: "SUPERMAN"
+ NAME: "HINAGURA"
+jobs: 
+   hello:
+    runs-on: ubuntu-latest
+    env: 
+      MEMORY: TOKYO
+    steps:
+      - name: memory check
+        run: | 
+            echo "$MEMORY"
+            echo "$NAME"
+      - name: Name Check
+        run: |
+         echo "$NAME"
+         echo "$MEMORY"
+        main
