@@ -11,7 +11,7 @@ jobs:
       - name: "PLEASE COME TO TOKYO"
         run: echo "$MEMORY"
         env: 
-          NAME: "RISH"
+          NAME: "SOOOPERMAN!!!"
       - name: "AFTER !!!"
         run: echo "$NAME"
         
