@@ -1,8 +1,6 @@
 name: Custom Environmnet Variables
 on: 
   push:
-    branches:
-      - feature
 env: 
  SUBSCRIBE: "SUPERMAN"
  NAME: "HINAGURA"
@@ -20,3 +18,4 @@ jobs:
         run: |
          echo "$NAME"
          echo "$MEMORY"
+         echo "${{ secrets.MYNAME }}
